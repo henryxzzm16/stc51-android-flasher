@@ -1,0 +1,57 @@
+name: 功能建议
+description: 提出新功能、兼容性扩展或文档改进
+title: "[feat] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        欢迎建议。本项目的方向由**真实硬件能验证什么**决定，所以请尽量说明
+        "你能提供哪种验证" —— 这比功能描述本身更重要。
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: 你想解决什么问题
+      description: 请描述场景与痛点，而不是直接给实现方案
+      placeholder: |
+        我只有 CH9102 模块（不是 CH340），插上后桥报
+        "not a CH340 (found 1a86:55d4)"，希望能支持它。
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 你设想的方案（可选）
+      description: 如果你已经想过怎么改，写在这里
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: can-verify
+    attributes:
+      label: 你能提供哪种验证？
+      description: 勾选所有你能做到的。仅靠"代码看起来对"的改动不会被合并（见 CONTRIBUTING.md）
+      options:
+        - label: 我有对应的硬件，可以在真机上测试并贴出日志
+        - label: 我可以提供数据手册/官方驱动源码等可复核依据
+        - label: 我只能提供想法，无法验证
+
+  - type: textarea
+    id: hardware
+    attributes:
+      label: 相关硬件（如果有）
+      placeholder: CH9102F 模块 / STC89C52RC 开发板 / Android 14 手机
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: 影响范围
+      options:
+        - label: 新硬件支持
+        - label: 性能（更高传输波特率等）
+        - label: 易用性（一键安装、错误提示等）
+        - label: 文档

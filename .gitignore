@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# 编译产物（SDCC）
+build/
+*.ihx
+*.hex
+*.bin
+*.rel
+*.rst
+*.sym
+*.lst
+*.asm
+*.map
+*.lk
+*.mem
+*.adb
+*.cdb
+*.omf
+
+# CH340 桥的运行时文件
+.ch340_pts
+.ch340_bridge.pid
+.ch340_bridge.log
+
+# 不分发 SDCC 二进制快照（GPL，体积大）
+tools/sdcc/
+tools/*.tar.bz2
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

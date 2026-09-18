@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 先查踩坑记录（14 条）
+    url: https://github.com/henryxzzm16/stc51-android-flasher/blob/main/docs/DEBUG_LOG.md
+    about: 烧录失败、握手超时、pyserial 报错等问题大多已在其中
+  - name: 排错清单
+    url: https://github.com/henryxzzm16/stc51-android-flasher#排错--troubleshooting
+    about: 按现象定位：设备枚举、冷启动、波特率、pyserial 补丁
+  - name: 安全问题（请勿公开提交）
+    url: https://github.com/henryxzzm16/stc51-android-flasher/security/advisories/new
+    about: 按 SECURITY.md 使用私有漏洞报告

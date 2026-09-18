@@ -1,0 +1,93 @@
+name: Bug 报告
+description: 报告一个可复现的问题（烧录失败、桥无法启动、脚本报错等）
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢反馈。这个问题涉及真实硬件，**请尽量把环境信息填全** ——
+        很多"看起来是软件 bug"的问题实际来自接线、供电或芯片差异。
+
+        提交前建议先看 [`docs/DEBUG_LOG.md`](../blob/main/docs/DEBUG_LOG.md) 的 14 条踩坑记录。
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: 现象
+      description: 发生了什么？你期望发生什么？
+      placeholder: |
+        运行 ./flash51.sh 后卡在 "Waiting for MCU, please cycle power:"，
+        断电重上电多次都无反应。
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 完整日志
+      description: 请粘贴原始输出（终端日志、`.ch340_bridge.log`），不要只描述。
+      render: text
+    validations:
+      required: true
+
+  - type: input
+    id: phone
+    attributes:
+      label: 手机型号与 Android 版本
+      placeholder: OPPO PEPM00 / Android 13 (API 33) / arm64-v8a / 无 root
+    validations:
+      required: true
+
+  - type: input
+    id: chip
+    attributes:
+      label: USB 转串口芯片
+      description: 芯片型号与版本（版本可由 `python3 ch340_bridge.py --test` 打印）
+      placeholder: CH340，芯片版本 0x31（1a86:7523）
+    validations:
+      required: true
+
+  - type: input
+    id: mcu
+    attributes:
+      label: 开发板与主控
+      placeholder: 江协科技 51 开发板 / STC89C52RC
+    validations:
+      required: true
+
+  - type: textarea
+    id: versions
+    attributes:
+      label: 软件版本
+      description: 请贴出实际版本，而不是"最新"
+      placeholder: |
+        Termux 0.118.3 / Termux:API 0.53.0
+        python 3.14.6 / pyusb 1.3.1 / pyserial 3.5 / stcgal 1.10
+        libusb 1.0.30 / SDCC 4.6.2 #16879 / patchelf 0.19.1 / glibc-runner 2.0
+      render: text
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: self-check
+    attributes:
+      label: 自检清单
+      description: 请确认你已执行过这些步骤
+      options:
+        - label: 已确认单片机与 USB **共地**
+        - label: 已给 pyserial 打上两处容错补丁（见 README 设计决策 3）
+        - label: 已给 SDCC **整个目录**的 ELF 可执行文件做跨 libc 处理
+        - label: 已运行 `termux-usb -l` 且能看到设备
+        - label: 已运行 `python3 ch340_bridge.py --test`
+
+  - type: dropdown
+    id: reproduce
+    attributes:
+      label: 复现频率
+      options:
+        - 每次必现
+        - 偶尔出现
+        - 只出现过一次
+    validations:
+      required: true

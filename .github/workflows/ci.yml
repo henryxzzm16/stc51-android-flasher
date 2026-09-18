@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: 语法检查与算法回归
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 设置 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Python 语法检查
+        run: python -m py_compile src/ch340_bridge.py
+
+      - name: CH341 分频算法回归
+        run: python tools/verify_divisor.py
+
+      - name: Shell 语法检查
+        run: |
+          bash -n src/flash51.sh
+          bash -n src/build.sh
+          echo "shell syntax ok"
+
+      - name: 检查换行符
+        run: |
+          # 仓库要求 LF；CRLF 会让脚本在 Termux 上以 "bad interpreter" 失败
+          if grep -rIl $'\r' src docs tools README.md CHANGELOG.md CONTRIBUTING.md; then
+            echo "::error::发现 CRLF 换行，请改为 LF"
+            exit 1
+          fi
+          echo "line endings ok"
+
+      - name: 检查占位符是否被误提交
+        run: |
+          if grep -n "<YOUR NAME>" LICENSE README.md; then
+            echo "::warning::LICENSE/README 中仍有 <YOUR NAME> 占位符"
+          fi
+
+  # 说明：本项目的核心行为（USB 传输、pty 桥、真实烧录）无法在 CI 中验证，
+  # 因为它需要 Android + USB Host + 真实单片机。硬件验证记录见 README 的
+  # "验证状态" 一节，以及 CHANGELOG。
