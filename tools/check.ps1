@@ -19,8 +19,8 @@ Write-Host "repo root: $root`n"
 # 1. required files
 Write-Host "[1] required files"
 $required = @(
-    "README.md", "LICENSE", ".gitignore", "CONTRIBUTING.md", "CHANGELOG.md",
-    "SECURITY.md", "CODE_OF_CONDUCT.md",
+    "README.md", "LICENSE", ".gitignore", ".gitattributes",
+    "CONTRIBUTING.md", "CHANGELOG.md", "SECURITY.md", "CODE_OF_CONDUCT.md",
     "src\ch340_bridge.py", "src\flash51.sh", "src\build.sh", "src\led.c",
     "docs\TECH_NOTES.md", "docs\DEBUG_LOG.md", "docs\PROTOCOL.md", "docs\THIRD_PARTY.md",
     "tools\verify_divisor.py", "tools\check.ps1", "tools\push.ps1",

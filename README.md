@@ -609,7 +609,13 @@ powershell -NoProfile -ExecutionPolicy Bypass -File tools/push.ps1 -NoPush
 ```
 
 `gh` 会自动创建仓库并设置 `origin`，因此 `.github/ISSUE_TEMPLATE/config.yml`
-里的 `henryxzzm16/stc51-android-flasher` 占位符也会被一并替换正确。
+里的 `USER/REPO` 占位符也会被一并替换正确。
+
+> **推送报鉴权失败时**（例如 Windows 上的
+> `schannel: AcquireCredentialsHandle failed: SEC_E_NO_CREDENTIALS`、
+> 或 `could not read Username for 'https://github.com'`）：
+> 先执行一次 `gh auth setup-git`，让 git 使用 gh 的凭据助手，然后重新 `git push`。
+> 本仓库的 `.gitattributes` 已强制 LF，因此不必担心检出后换行符被改坏。
 
 **不使用 gh（推送到已存在的空仓库）：**
 
