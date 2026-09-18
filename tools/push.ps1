@@ -56,6 +56,15 @@ function GitTry($gitArgs) {
     $out | Where-Object { $_ -ne "" }
 }
 
+# Native commands that are allowed to fail (probe commands). $ErrorActionPreference
+# = "Stop" also covers a native command's stderr, so their output is discarded here
+# and only the exit code is inspected. Call with $outOnly = $true when the stdout
+# is needed (e.g. gh repo view --json).
+function TryNative([scriptblock]$cmd, [switch]$outOnly) {
+    $out = if ($outOnly) { & $cmd 2>$null } else { & $cmd *> $null }
+    return [pscustomobject]@{ Ok = ($LASTEXITCODE -eq 0); Out = $out }
+}
+
 # ------------------------------------------------------------------ 0. toolchain
 if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
     Die "git not found. Install it first: winget install Git.Git"
@@ -184,20 +193,20 @@ if ($NoPush) {
 
 # ------------------------------------------------------------------ 5. create + push
 if ($ghOk -and $slug) {
-    & gh repo view $slug *> $null
-    if ($LASTEXITCODE -eq 0) {
+    $probe = TryNative { & gh repo view $slug }
+    if ($probe.Ok) {
         Warn "remote repo $slug already exists; reusing it."
     } else {
         Info "creating $slug ($Visibility) with gh ..."
-        & gh repo create $slug "--$Visibility" --source . --description $Description
+        & gh repo create $slug "--$Visibility" --source . --description $Description 2>$null
         if ($LASTEXITCODE -ne 0) { Die "gh repo create failed; see output above." }
         Good "repository created."
     }
     Info "pushing branch $Branch ..."
-    & gh repo set-default $slug *> $null
+    & gh repo set-default $slug 2>$null
     & git push -u origin $Branch
     if ($LASTEXITCODE -ne 0) { Die "git push failed." }
-    $url = (& gh repo view $slug --json url --jq ".url" 2>$null | Select-Object -First 1)
+    $url = ((TryNative { & gh repo view $slug --json url --jq ".url" } -outOnly).Out | Select-Object -First 1)
     Write-Host ""
     Good ("done: " + $url)
     Write-Host "next: check the Actions tab - CI runs on the first push."
