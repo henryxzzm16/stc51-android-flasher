@@ -9,7 +9,16 @@ body:
         感谢反馈。这个问题涉及真实硬件，**请尽量把环境信息填全** ——
         很多"看起来是软件 bug"的问题实际来自接线、供电或芯片差异。
 
-        提交前建议先看 [`docs/DEBUG_LOG.md`](../blob/main/docs/DEBUG_LOG.md) 的 14 条踩坑记录。
+        提交前请先确认两件事：
+
+        1. 你的硬件是**已验证过的组合**（江协科技 51 开发板 + STC89C52RC/LE52RC +
+           板载 CH340）。**本项目没有做过 STM32 或任何其他平台的试验**，
+           其他芯片/机型的问题作者无法判断，见 [docs/SCOPE.md](../blob/main/docs/SCOPE.md)。
+        2. 先看 [`docs/DEBUG_LOG.md`](../blob/main/docs/DEBUG_LOG.md) 的 14 条踩坑记录
+           与 README 的排错表。
+
+        > 作者是新手，不提供技术支持。**如果问题比较棘手，建议同时找专业人士，
+        > 或把完整报错贴给 AI 帮你调试。** 在这里开 issue 也可以，但不承诺处理时间。
 
   - type: textarea
     id: what-happened
@@ -75,6 +84,7 @@ body:
       label: 自检清单
       description: 请确认你已执行过这些步骤
       options:
+        - label: 我的硬件在**已验证范围**内（江协科技 51 板 + STC89C52RC/LE52RC + CH340）；不是 STM32 或其他未验证芯片
         - label: 已确认单片机与 USB **共地**
         - label: 已给 pyserial 打上两处容错补丁（见 README 设计决策 3）
         - label: 已给 SDCC **整个目录**的 ELF 可执行文件做跨 libc 处理
