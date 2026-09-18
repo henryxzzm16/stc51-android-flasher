@@ -1,0 +1,23 @@
+# 统一换行符：仓库内一律 LF。
+#
+# 为什么必须这样：src/flash51.sh、src/build.sh、src/ch340_bridge.py 的 shebang 指向
+# Termux 里的绝对路径，一旦被检出成 CRLF，在 Termux 上会直接报
+# "bad interpreter" 或莫名其妙的语法错误。Windows 用户克隆时尤其容易踩到。
+#
+# 已经在仓库里的文件（text eol=lf 保证检出也用 LF）
+* text=auto eol=lf
+
+*.sh    text eol=lf
+*.py    text eol=lf
+*.c     text eol=lf
+*.h     text eol=lf
+*.md    text eol=lf
+
+# 二进制资源不做换行处理
+*.png   binary
+*.jpg   binary
+*.ico   binary
+*.zip   binary
+*.bz2   binary
+*.ihx   binary
+*.hex   binary
