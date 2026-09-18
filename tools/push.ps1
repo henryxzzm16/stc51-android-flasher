@@ -57,12 +57,27 @@ function GitTry($gitArgs) {
 }
 
 # Native commands that are allowed to fail (probe commands). $ErrorActionPreference
-# = "Stop" also covers a native command's stderr, so their output is discarded here
-# and only the exit code is inspected. Call with $outOnly = $true when the stdout
-# is needed (e.g. gh repo view --json).
+# = "Stop" also treats a native command's stderr as a terminating error, so it is
+# relaxed to "Continue" for the duration of these probes and restored afterwards.
+# Returns @{ Ok = exit code was 0; Out = stdout (only captured with -outOnly) }.
 function TryNative([scriptblock]$cmd, [switch]$outOnly) {
-    $out = if ($outOnly) { & $cmd 2>$null } else { & $cmd *> $null }
-    return [pscustomobject]@{ Ok = ($LASTEXITCODE -eq 0); Out = $out }
+    $saved = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
+    $ok = $false
+    $out = $null
+    try {
+        if ($outOnly) {
+            $out = & $cmd 2>$null
+        } else {
+            & $cmd *> $null
+        }
+        $ok = ($LASTEXITCODE -eq 0)
+    } catch {
+        $ok = $false
+    } finally {
+        $ErrorActionPreference = $saved
+    }
+    return [pscustomobject]@{ Ok = $ok; Out = $out }
 }
 
 # ------------------------------------------------------------------ 0. toolchain
